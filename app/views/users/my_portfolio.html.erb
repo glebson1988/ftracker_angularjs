@@ -15,8 +15,19 @@
       </div>
     </div>
   </form>
+
+  <div class="results-block ng-hide">
+    <span class="badge">Placeholder</span>
+  </div>
+
+  <div id="stock-lookup-results" class="well results-block ng-hide" ng-show="stock.name != undefined">
+    <strong>Symbol: </strong> {{ stock.symbol }}
+    <strong>Name: </strong> {{ stock.name }}
+    <strong>Price: </strong> {{ stock.last_price }}
+    <a href="#" class="btn btn-xs btn-success">Add To My Stocks</a>
+    <span class="label label-default"></span>
+  </div>
+
 </div>
-<div id="results">
-  <%= render 'result' %>
-</div>
+
 <%= render 'stocks/list' %>
