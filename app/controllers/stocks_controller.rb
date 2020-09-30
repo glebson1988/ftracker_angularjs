@@ -2,14 +2,13 @@
 
 class StocksController < ApplicationController
   def search
-    if params[:stock].blank?
-      flash.now[:danger] = 'You have entered an empty search string'
+    @stock ||= Stock.new_from_lookup(params[:stock]) if params[:stock]
+
+    if @stock
+      @stock.can_be_added = current_user.can_add_stock?(@stock.ticker)
+      render json: @stock, methods: [:can_be_added]
     else
-      @stock = Stock.new_from_lookup(params[:stock])
-      flash.now[:danger] = 'You have entered an incorrect symbol' unless @stock
-    end
-    respond_to do |format|
-      format.js { render partial: 'users/result' }
+      render status: 404, json: { response: 'No stocks exists for this symbol.' }
     end
   end
 end

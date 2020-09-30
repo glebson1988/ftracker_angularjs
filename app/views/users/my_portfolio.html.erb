@@ -24,7 +24,7 @@
     <strong>Symbol: </strong> {{ stock.symbol }}
     <strong>Name: </strong> {{ stock.name }}
     <strong>Price: </strong> {{ stock.last_price }}
-    <a href="#" class="btn btn-xs btn-success">Add To My Stocks</a>
+    <a href="#" class="btn btn-xs btn-success ng-hide" ng-show="stock.can_be_added">Add To My Stocks</a>
     <span class="label label-default"></span>
   </div>
 

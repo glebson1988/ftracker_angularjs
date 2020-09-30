@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Stock < ApplicationRecord
+  attr_accessor :can_be_added
+
   has_many :user_stocks
   has_many :users, through: :user_stocks
 
