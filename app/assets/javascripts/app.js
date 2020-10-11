@@ -12,6 +12,13 @@ var app = angular.module('FinanceTrackerApp', [])
 
         return stockApi;
     }])
+    .factory('friendService', ['http,', function($http) {
+        var friendApi = {};
+
+        friendApi.searchFriends = function(search_param) {
+            return $http.get('/search_friends.json?search_param=' + search_param);
+        }
+    }])
     .controller('stocksController', ['$scope', 'stockService', function ($scope, stockService) {
         $scope.stock = {};
         $scope.lookup = function () {
@@ -51,4 +58,24 @@ var app = angular.module('FinanceTrackerApp', [])
                 $scope.stock.error = 'Stock cannot be added';
             }
         }
+    }])
+    .controller('friendsController', ['$scope', function($scope) {
+        $scope.friends = {};
+
+        $scope.lookup = function(){
+            if($scope.friend_search_param != undefined && $scope.friend_search_param != '') {
+                friendService.searchFriends($scope.friend_search_param)
+                .then(function(response){
+                    $scope.friends.error = null;
+                    $scope.friends.message = null;
+                    $scope.friends.list = response.data;
+                },
+                function(response){
+                    $scope.friends = {};
+                    $scope.friends.error = response.data.response;
+                });
+            } else {
+                $scope.friends = {};
+            }
+        };
     }]);
