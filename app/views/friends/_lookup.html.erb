@@ -6,7 +6,7 @@
       <div class="col-md-10">
         <input type="text" id="friend-search-param"
                placeholder="Enter name or email" class="form-control search-box input-lg"
-               autofocus="true" ng-model="friend_search_param" />
+               autofocus="true" ng-model="friend_search_param"/>
       </div>
       <div class="col-md-2">
         <button class="btn btn-lg btn-success" type="submit">
@@ -16,6 +16,30 @@
     </div>
   </form>
 </div>
+
 <div id="results">
-  <%= render 'friends/result' %>
+  <div class="results-block" id="friend-lookup-errors">
+
+  </div>
+
+  <div class="results-block" id="friend-lookup-status">
+
+  </div>
+
+  <div id="friend-lookup-results" class="well results-block col-md-10 ng-hide"
+       ng-show="friends.list.length > 0">
+    <table class="search-results-table col-md-12">
+      <tbody ng-repeat="friend in friends.list">
+      <tr>
+        <td><strong>Name:</strong> {{friend.first_name }} {{ friend.last_name }}</td>
+        <td><strong>Email:</strong> {{ friend.email }}</td>
+        <td><strong>Profile:</strong>
+          <a href="{{friend.profile_path}}" class="btn btn-xs btn-success">View Profile</a>
+          <a href="#" class="btn btn-xs btn-success ng-hide" ng-show="!friend.friends_already">Add as my friend</a>
+          <span class="label label-primary ng-hide" ng-show="friend.friends_already">Friend</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -12,12 +12,14 @@ var app = angular.module('FinanceTrackerApp', [])
 
         return stockApi;
     }])
-    .factory('friendService', ['http,', function($http) {
+    .factory('friendService', ['$http', function($http) {
         var friendApi = {};
 
         friendApi.searchFriends = function(search_param) {
             return $http.get('/search_friends.json?search_param=' + search_param);
         }
+
+        return friendApi;
     }])
     .controller('stocksController', ['$scope', 'stockService', function ($scope, stockService) {
         $scope.stock = {};
@@ -59,7 +61,7 @@ var app = angular.module('FinanceTrackerApp', [])
             }
         }
     }])
-    .controller('friendsController', ['$scope', function($scope) {
+    .controller('friendsController', ['$scope', 'friendService', function($scope, friendService) {
         $scope.friends = {};
 
         $scope.lookup = function(){

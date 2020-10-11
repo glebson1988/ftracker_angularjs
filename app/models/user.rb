@@ -10,6 +10,9 @@ class User < ApplicationRecord
   has_many :friendships
   has_many :friends, through: :friendships
 
+  attr_accessor :profile_path
+  attr_accessor :friends_already
+
   def full_name
     return "#{first_name} #{last_name}".strip if first_name || last_name
 
@@ -37,6 +40,10 @@ class User < ApplicationRecord
 
   def not_friends_with?(friend_id)
     friendships.where(friend_id: friend_id).count < 1
+  end
+
+  def friends_with?(friend_id)
+    !not_friends_with?(friend_id)
   end
 
   def self.search(param)

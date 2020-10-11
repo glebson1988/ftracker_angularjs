@@ -21,12 +21,18 @@ class UsersController < ApplicationController
     else
       @users = User.search(params[:search_param])
       @users = current_user.except_current_user(@users)
-      if @users.blank?
-        flash.now[:danger] = 'No users match this search criteria'
-      end
+      flash.now[:danger] = 'No users match this search criteria' if @users.blank?
     end
-    respond_to do |format|
-      format.js { render partial: 'friends/result' }
+
+    if @users.blank?
+      render status: 404, json: { response: 'No users match this search criteria.' }
+    else
+      @users.map! do |user|
+        user.profile_path = user_path(user)
+        user.friends_already = current_user.friends_with?(user.id)
+        user
+      end
+      render json: @users, methods: [:profile_path, :friends_already]
     end
   end
 
