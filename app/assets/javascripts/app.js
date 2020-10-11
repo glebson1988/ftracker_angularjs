@@ -12,11 +12,15 @@ var app = angular.module('FinanceTrackerApp', [])
 
         return stockApi;
     }])
-    .factory('friendService', ['$http', function($http) {
+    .factory('friendService', ['$http', function ($http) {
         var friendApi = {};
 
-        friendApi.searchFriends = function(search_param) {
+        friendApi.searchFriends = function (search_param) {
             return $http.get('/search_friends.json?search_param=' + search_param);
+        }
+
+        friendApi.addFriend = function (id) {
+            return $http.post('/add_friend.json?friend=' + id);
         }
 
         return friendApi;
@@ -43,16 +47,16 @@ var app = angular.module('FinanceTrackerApp', [])
             }
         }
 
-        $scope.add = function (){
-            if($scope.stock != undefined && $scope.stock.symbol != '') {
+        $scope.add = function () {
+            if ($scope.stock != undefined && $scope.stock.symbol != '') {
                 stockService.addStockToPortfolio($scope.stock.symbol)
-                    .then(function (response){
+                    .then(function (response) {
                         $scope.stock.error = null;
                         $scope.stock.message = response.data.response;
                         $scope.stock.name = null;
                         $scope.ticker = null;
                         $('#stock-list').load('my_portfolio.js')
-                    }, function (response){
+                    }, function (response) {
                         $scope.stock = {};
                         $scope.stock.error = response.data.response;
                     });
@@ -61,23 +65,41 @@ var app = angular.module('FinanceTrackerApp', [])
             }
         }
     }])
-    .controller('friendsController', ['$scope', 'friendService', function($scope, friendService) {
+    .controller('friendsController', ['$scope', 'friendService', function ($scope, friendService) {
         $scope.friends = {};
 
-        $scope.lookup = function(){
-            if($scope.friend_search_param != undefined && $scope.friend_search_param != '') {
+        $scope.lookup = function () {
+            if ($scope.friend_search_param != undefined && $scope.friend_search_param != '') {
                 friendService.searchFriends($scope.friend_search_param)
-                .then(function(response){
-                    $scope.friends.error = null;
-                    $scope.friends.message = null;
-                    $scope.friends.list = response.data;
-                },
-                function(response){
-                    $scope.friends = {};
-                    $scope.friends.error = response.data.response;
-                });
+                    .then(function (response) {
+                            $scope.friends.error = null;
+                            $scope.friends.message = null;
+                            $scope.friends.list = response.data;
+                        },
+                        function (response) {
+                            $scope.friends = {};
+                            $scope.friends.error = response.data.response;
+                        });
             } else {
                 $scope.friends = {};
+            }
+        };
+
+        $scope.add = function (friend_id) {
+            $scope.friends = {}
+            if (friend_id != undefined && friend_id != '') {
+                friendService.addFriend(friend_id)
+                    .then(function (response) {
+                            $scope.friends.error = null;
+                            $scope.friends.message = response.data.response;
+                            $scope.friend_search_param = null;
+                            $('#friends-list').load('my_friends.js');
+                        },
+                        function (response) {
+                            $scope.friends.error = response.data.response;
+                        })
+            } else {
+                $scope.friends.error = "Friend cannot be added";
             }
         };
     }]);

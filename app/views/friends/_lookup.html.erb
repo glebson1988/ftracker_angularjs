@@ -18,12 +18,12 @@
 </div>
 
 <div id="results">
-  <div class="results-block" id="friend-lookup-errors">
-
+  <div class="results-block alert alert-danger ng-hide" id="friend-lookup-errors" ng-show="friends.error">
+    {{friends.error}}
   </div>
 
-  <div class="results-block" id="friend-lookup-status">
-
+  <div class="results-block alert alert-success ng-hide" id="friend-lookup-status" ng-show="friends.message">
+    {{friends.message}}
   </div>
 
   <div id="friend-lookup-results" class="well results-block col-md-10 ng-hide"
@@ -35,7 +35,11 @@
         <td><strong>Email:</strong> {{ friend.email }}</td>
         <td><strong>Profile:</strong>
           <a href="{{friend.profile_path}}" class="btn btn-xs btn-success">View Profile</a>
-          <a href="#" class="btn btn-xs btn-success ng-hide" ng-show="!friend.friends_already">Add as my friend</a>
+          <button class="btn btn-xs btn-success ng-hide"
+                  ng-show="!friend.friends_already"
+                  ng-click="add(friend.id)">
+            Add as my friend
+          </button>
           <span class="label label-primary ng-hide" ng-show="friend.friends_already">Friend</span>
         </td>
       </tr>
